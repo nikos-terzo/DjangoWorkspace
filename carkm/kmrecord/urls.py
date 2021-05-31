@@ -2,7 +2,8 @@ from django.urls import path
 
 from . import views
 
+app_name = 'kmrecord'
 urlpatterns = [
-    path('', views.index, name="index"),
-		path('mycars', views.myCars, name="mycars")
+	path('', views.index, name='index'),
+	path('<str:licensePlate>/', views.car, name='car'),
 ]

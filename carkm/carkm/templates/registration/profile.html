@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p> Hello {{ user }}. You are logged in!</p>
+<a href="{% url 'kmrecord:index' %}">Km Record</a>
+<a href="{% url 'User Logout' %}">logout</a>
+{% endblock %}

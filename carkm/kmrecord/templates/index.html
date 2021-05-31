@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if userCars %}
+	<ul>
+	{% for car in userCars %}
+		<li><a href="{% url 'kmrecord:car' car.licensePlate%}">{{ car.licensePlate }}</a></li>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>No cars available.</p>
+{% endif %}
+
+{% endblock %}

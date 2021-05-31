@@ -1,38 +1,24 @@
-from django.contrib.auth import authenticate
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.http.response import HttpResponseForbidden
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
 from guardian.shortcuts import get_objects_for_user
 from .models import Car
 
 # Create your views here.
-# @login_required
+@login_required
 def index(request):
-	username = request.GET['username']
-	password = request.GET['password']
-	user = authenticate(request, username=username, password=password)
-	if user:
-		login(request, user)
-	else:
-		return HttpResponse("Error")
-	
-	resp = """<!DOCTYPE html>
-<html>
-	<header></header>
-	<body>
-    <p>Hello</p>
-	</body>
-</html>"""
-	return HttpResponse(resp)
+	currentUser = User.objects.get(username=request.user.username)
+	context = {}
+	context['userCars'] = get_objects_for_user(currentUser, 'kmrecord.view_car')
+	return render(request, 'index.html', context)
 
 @login_required
-def myCars(request):
+def car(request, licensePlate):
 	currentUser = User.objects.get(username=request.user.username)
-	myCars = get_objects_for_user(currentUser, 'kmrecord.view_car')
-	responseStr = 'My cars:\n'
-	for car in myCars:
-		responseStr += car.licensePlate + '\n'
+	carObj = get_object_or_404(Car, licensePlate=licensePlate)
+	if not currentUser.has_perm('kmrecord.view_car', carObj):
+		return HttpResponseForbidden()
+	context = {'car': carObj}
+	return render(request, 'car.html', context)
 
-	return HttpResponse(responseStr)
