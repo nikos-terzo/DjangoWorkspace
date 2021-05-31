@@ -2,14 +2,33 @@
 
 {% block content %}
 
-{% if userCars %}
-	<ul>
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">License Plate</th>
+			<th scope="col">Car Name</th>
+			<th scope="col">Comments</th>
+		</tr>
+	</thead>
+	<tbody>
 	{% for car in userCars %}
-		<li><a href="{% url 'kmrecord:car' car.licensePlate%}">{{ car.licensePlate }}</a></li>
+		<tr>
+			<td><a href="{% url 'kmrecord:car' car.licensePlate%}">{{ car.licensePlate }}</a></td>
+			<td>{{ car.name }}</td>
+			<td>{{ car.comments}}</td>
+		</tr>
 	{% endfor %}
-	</ul>
-{% else %}
-	<p>No cars available.</p>
-{% endif %}
+	</tbody>
+	<form method="post" action="{% url 'kmrecord:Add Car' %}">
+	{% csrf_token %}
+		<tfoot>
+			<tr>
+				<td><input type="text" name="licensePlate" maxlength="7" required></td>
+				<td><input type="text" name="name" maxlength="31" required></td>
+				<td><input type="text" name="comments" maxlength="251" required><button type="submit" class="btn btn-primary">+</button></td>
+			</tr>
+		</tfoot>
+	</form>
 
+</table>
 {% endblock %}
