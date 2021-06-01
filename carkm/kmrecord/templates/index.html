@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load guardian_tags %}
+
 {% block content %}
 
 <table class="table">
@@ -8,14 +10,35 @@
 			<th scope="col">License Plate</th>
 			<th scope="col">Car Name</th>
 			<th scope="col">Comments</th>
+			<th scope="col">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
 	{% for car in userCars %}
 		<tr>
-			<td><a href="{% url 'kmrecord:car' car.licensePlate%}">{{ car.licensePlate }}</a></td>
+			<td>{{ car.licensePlate }}</td>
+		{% get_obj_perms request.user for car as 'carPerms' %}
+		{% if 'change_car' in carPerms %}
+			<form method="post" action="{% url 'kmrecord:Change Car' %}">
+			{% csrf_token %}
+				<input type="hidden" name="licensePlate" value="{{ car.licensePlate }}">
+				<td><input type="text" name="name" maxlength="63" value="{{ car.name }}" required></td>
+				<td><input type="text" name="comments" maxlength="255" value="{{ car.comments }}"></td>
+				<td><div class="btn-group" role="group"><button type="submit" class="btn btn-primary">✓ Apply</button>
+			</form>
+		{% else %}
 			<td>{{ car.name }}</td>
 			<td>{{ car.comments}}</td>
+			<td><div class="btn-group" role="group">
+		{% endif %}
+		{% if 'delete_car' in carPerms %}
+				<form method="post" action="{% url 'kmrecord:Delete Car' %}">
+					{% csrf_token %}
+					<input type="hidden" name="licensePlate" value="{{ car.licensePlate }}">
+					<button type="submit" class="btn btn-danger">— Delete</button>
+				</form>
+		{% endif %}
+			</div></td>
 		</tr>
 	{% endfor %}
 	</tbody>
@@ -24,8 +47,9 @@
 		<tfoot>
 			<tr>
 				<td><input type="text" name="licensePlate" maxlength="7" required></td>
-				<td><input type="text" name="name" maxlength="31" required></td>
-				<td><input type="text" name="comments" maxlength="251" required><button type="submit" class="btn btn-primary">+</button></td>
+				<td><input type="text" name="name" maxlength="63" required></td>
+				<td><input type="text" name="comments" maxlength="255"></td>
+				<td><button type="submit" class="btn btn-success">+ Add</button></td>
 			</tr>
 		</tfoot>
 	</form>
