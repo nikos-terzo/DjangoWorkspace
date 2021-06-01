@@ -1,8 +1,59 @@
-<!DOCTYPE html>
-<html>
-<head>
-</head>
-<body>
-{{ car }}
-</body>
-</html>
+{% extends "base.html" %}
+
+{% load guardian_tags %}
+
+{% block content %}
+
+<h1>{{ car.licensePlate }}: {{ car.name }}</h1> <!-- TODO: __str__ -->
+
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">Id</th>
+			<th scope="col">KM</th>
+			<th scope="col">Date</th>
+			<th scope="col">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for record in records %}
+		<tr>
+			<td><a href="{% url 'kmrecord:Record' record.id %}">{{ record.id }}</a></td>
+		{% get_obj_perms request.user for record as 'recordPerms' %}
+		{% if 'change_record' in recordPerms %}
+			<form method="post" action="{% url 'kmrecord:Change Record' record.id %}">
+			{% csrf_token %}
+				<td><input type="number" name="km" step="0.01" value="{{ record.km }}" required></td>
+				<td><input type="date" name="date" value="{{ record.date|date:'Y-m-d' }}" required></td>
+				<td><div class="btn-group" role="group"><button type="submit" class="btn btn-primary">✓ Apply</button>
+			</form>
+		{% else %}
+			<td>{{ record.km }}</td>
+			<td>{{ record.date }}</td>
+			<td><div class="btn-group" role="group">
+		{% endif %}
+		{% if 'delete_record' in recordPerms %}
+				<form method="post" action="{% url 'kmrecord:Delete Record' record.id %}">
+					{% csrf_token %}
+					<button type="submit" class="btn btn-danger">— Delete</button>
+				</form>
+		{% endif %}
+			</div></td>
+		</tr>
+	{% endfor %}
+	</tbody>
+	<form method="post" action="{% url 'kmrecord:Add Record' car.licensePlate %}">
+	{% csrf_token %}
+		<tfoot>
+			<tr>
+				<td></td>
+				<td><input type="number" name="km" step="0.01" required></td>
+				<td><input type="date" name="date" required></td>
+				<td><button type="submit" class="btn btn-success">+ Add</button></td>
+			</tr>
+		</tfoot>
+	</form>
+
+</table>
+
+{% endblock %}

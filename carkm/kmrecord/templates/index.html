@@ -14,9 +14,9 @@
 		</tr>
 	</thead>
 	<tbody>
-	{% for car in userCars %}
+	{% for car in cars %}
 		<tr>
-			<td>{{ car.licensePlate }}</td>
+			<td><a href="{% url 'kmrecord:Car' car.licensePlate %}">{{ car.licensePlate }}</a></td>
 		{% get_obj_perms request.user for car as 'carPerms' %}
 		{% if 'change_car' in carPerms %}
 			<form method="post" action="{% url 'kmrecord:Change Car' %}">
