@@ -10,7 +10,7 @@ urlpatterns = [
 	path('cars/deleteCar', views.deleteCar, name='Delete Car'),
 	path('cars/<str:licensePlate>/', views.car, name='Car'),	# temp
 	path('cars/<str:licensePlate>/addRecord', views.addRecord, name='Add Record'),
-	path('cars/<int:recordId>/changeRecord', views.changeRecord, name='Change Record'),
-	path('cars/<int:recordId>/deleteRecord', views.deleteRecord, name='Delete Record'),
+	path('records/<int:recordId>/changeRecord', views.changeRecord, name='Change Record'),
+	path('records/<int:recordId>/deleteRecord', views.deleteRecord, name='Delete Record'),
 	path('records/<int:recordId>/', views.record, name='Record')
 ]

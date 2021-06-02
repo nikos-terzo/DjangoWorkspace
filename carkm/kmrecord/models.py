@@ -117,7 +117,7 @@ class RichRecord(Record):
 	* **comments** - CharField - *optional*
 		Comments about the record
 	"""
-	# record = models.ForeignKey('Record', on_delete=models.PROTECT, primary_key=True, db_column='record_id')
+	record = models.OneToOneField(Record, on_delete=models.CASCADE, parent_link=True)
 
 	comments = models.CharField(max_length=255)
 
@@ -148,9 +148,9 @@ class FuelRecord(Record):
 		* **pricePerLitre** - Decimal - *required*
 			Price per litre.
 	"""
-	# record = models.ForeignKey('Record', on_delete=models.PROTECT, primary_key=True, db_column='record_id')
+	record = models.OneToOneField(Record, on_delete=models.CASCADE, parent_link=True)
 
-	fuelType = models.SmallIntegerField()
+	fuelType = models.SmallIntegerField(default=FuelType.GASOLINE.value)
 
 	price = models.DecimalField(max_digits=5, decimal_places=2)
 
