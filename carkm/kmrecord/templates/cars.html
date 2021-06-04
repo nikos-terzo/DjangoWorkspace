@@ -16,12 +16,12 @@
 	<tbody>
 	{% for car in cars %}
 		<tr>
-			<td><a href="{% url 'kmrecord:Car' car.licensePlate %}">{{ car.licensePlate }}</a></td>
+			<td><a href="{% url 'kmrecord:Car' car.licensePlate %}">{{ car.licensePlate }}</a></td> <!-- TODO change -->
 		{% get_obj_perms request.user for car as 'carPerms' %}
 		{% if 'change_car' in carPerms %}
 			<form method="post" action="{% url 'kmrecord:Change Car' %}">
 			{% csrf_token %}
-				<input type="hidden" name="licensePlate" value="{{ car.licensePlate }}">
+				<input type="hidden" name="licensePlate" value="{{ car.licensePlate }}"> <!-- TODO change -->
 				<td><input type="text" name="name" maxlength="63" value="{{ car.name }}" required></td>
 				<td><input type="text" name="comments" maxlength="255" value="{{ car.comments }}"></td>
 				<td><div class="btn-group" role="group"><button type="submit" class="btn btn-primary">✓ Apply</button>

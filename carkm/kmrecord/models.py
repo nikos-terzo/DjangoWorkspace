@@ -56,8 +56,8 @@ class Car(models.Model):
 
 	comments = models.CharField(max_length=255)
 
-	def get_name(self):
-		return self.name
+	# class Meta:
+		# permissions = ('add_record4car') # TODO
 
 
 class Record(models.Model):

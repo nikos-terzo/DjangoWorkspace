@@ -19,7 +19,6 @@ from django.contrib.auth import views as auth_views
 from carkm import views
 
 urlpatterns = [
-	path('', include('kmrecord.urls')),
 	path('kmrecord/', include('kmrecord.urls')),
 	path('admin/', admin.site.urls),
 	path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name="User Login"),

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% load guardian_tags %}
+
+{% block content %}
+<h1>Gas stations</h1>
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">ID</th>
+			<th scope="col">Name</th>
+			<th scope="col">URL</th>
+			<th scope="col">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for gasStation in gasStations %}
+		<tr>
+			<td><b>{{ gasStation.id }}</b></td>
+		{% get_obj_perms request.user for gasStation as 'gasStationPerms' %}
+		{% if 'change_gasstation' in gasStationPerms %}
+			<form method="post" action="{% url 'kmrecord:Change GasStation' gasStation.id %}">
+			{% csrf_token %}
+				<td><input type="text" name="name" maxlength="63" value="{{ gasStation.name }}" required></td>
+				<td><input type="text" name="url" maxlength="255" value="{{ gasStation.url }}"></td>
+				<td><div class="btn-group" role="group"><button type="submit" class="btn btn-primary">✓ Apply</button>
+			</form>
+		{% else %}
+			<td>{{ gasStation.name }}</td>
+			<td>{{ gasStation.comments}}</td>
+			<td><div class="btn-group" role="group">
+		{% endif %}
+		{% if 'delete_gasstation' in gasStationPerms %}
+				<form method="post" action="{% url 'kmrecord:Delete GasStation' gasStation.id %}">
+					{% csrf_token %}
+					<button type="submit" class="btn btn-danger">— Delete</button>
+				</form>
+		{% endif %}
+			</div></td>
+		</tr>
+	{% endfor %}
+	</tbody>
+	<form method="post" action="{% url 'kmrecord:Add GasStation' %}">
+	{% csrf_token %}
+		<tfoot>
+			<tr>
+				<td></td>
+				<td><input type="text" name="name" maxlength="63" required></td>
+				<td><input type="text" name="url" maxlength="200"></td>
+				<td><button type="submit" class="btn btn-success">+ Add</button></td>
+			</tr>
+		</tfoot>
+	</form>
+
+</table>
+{% endblock %}
