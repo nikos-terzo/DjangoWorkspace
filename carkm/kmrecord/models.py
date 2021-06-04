@@ -30,8 +30,10 @@ class FuelType(Enum):
 	* PETROLEUM - Petroleum - 2
 	"""
 	GAS = 0
-	GASOLINE = 1
-	PETROLEUM = 2
+	GASOLINE95 = 1
+	GASOLINE98 = 2
+	GASOLINE100 = 3
+	PETROLEUM = 4
 
 
 class Car(models.Model):
@@ -122,6 +124,12 @@ class RichRecord(Record):
 	comments = models.CharField(max_length=255)
 
 
+class GasStation(models.Model):
+
+	name = models.CharField(max_length=63)
+	url = models.URLField()
+
+
 # Example store a FuelRecord
 # frec = FuelRecord(record = recs[0], type=FuelType.GASOLINE.value, price=15.,quantity=10.,pricePerLitre=1.5,gasStation='Shell mhden')
 class FuelRecord(Record):
@@ -150,7 +158,7 @@ class FuelRecord(Record):
 	"""
 	record = models.OneToOneField(Record, on_delete=models.CASCADE, parent_link=True)
 
-	fuelType = models.SmallIntegerField(default=FuelType.GASOLINE.value)
+	fuelType = models.SmallIntegerField(default=FuelType.GASOLINE95.value)
 
 	price = models.DecimalField(max_digits=5, decimal_places=2)
 
@@ -158,7 +166,7 @@ class FuelRecord(Record):
 
 	pricePerLitre = models.DecimalField(max_digits=5, decimal_places=3)
 
-	gasStation = models.CharField(max_length=63)
+	gasStation = models.ForeignKey(GasStation, on_delete=models.SET_NULL, blank = True, null=True)
 
 	"""
 	Returns the fuel type of the FuelRecord
@@ -193,3 +201,4 @@ def remove_obj_perms_connected_with_obj(sender, instance, **kwargs):
 
 pre_delete.connect(remove_obj_perms_connected_with_obj, sender=Car)
 pre_delete.connect(remove_obj_perms_connected_with_obj, sender=Record)
+pre_delete.connect(remove_obj_perms_connected_with_obj, sender=GasStation)
