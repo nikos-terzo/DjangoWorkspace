@@ -4,6 +4,8 @@ from . import views
 
 app_name = 'kmrecord'
 urlpatterns = [
+	path('', views.index, name='Cars'),
+	path('cars/', views.index, name='Cars'),
 	path('cars/index', views.index, name='Cars'),
 	path('cars/addCar', views.addCar, name='Add Car'),
 	path('cars/changeCar', views.changeCar, name='Change Car'),

@@ -19,9 +19,12 @@ from django.contrib.auth import views as auth_views
 from carkm import views
 
 urlpatterns = [
+	path('', include('kmrecord.urls')),
 	path('kmrecord/', include('kmrecord.urls')),
 	path('admin/', admin.site.urls),
+	path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name="User Login"),
 	path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name="User Login"),
+	path('logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name="User Logout"),
 	path('accounts/logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name="User Logout"),
 	path('accounts/profile/', views.userProfile, name='User Profile'),
 	# path('accounts/', include('django.contrib.auth.urls')),
