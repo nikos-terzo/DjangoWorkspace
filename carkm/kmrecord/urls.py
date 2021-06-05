@@ -1,13 +1,15 @@
 from django.urls import path
+from django.views.generic.base import RedirectView
 
 from . import views
 
 app_name = 'kmrecord'
 urlpatterns = [
+	path('', RedirectView.as_view(url='cars/')),
 	path('cars/', views.cars, name='Cars'),
 	path('cars/addCar', views.addCar, name='Add Car'),
-	path('cars/changeCar', views.changeCar, name='Change Car'),
-	path('cars/deleteCar', views.deleteCar, name='Delete Car'),
+	path('cars/<str:licensePlate>/changeCar', views.changeCar, name='Change Car'),
+	path('cars/<str:licensePlate>/deleteCar', views.deleteCar, name='Delete Car'),
 	path('cars/<str:licensePlate>/', views.car, name='Car'),	# temp
 	path('cars/<str:licensePlate>/addRecord', views.addRecord, name='Add Record'),
 	path('cars/<str:licensePlate>/createRecord', views.createRecord, name='Create Record'),

@@ -68,17 +68,23 @@ function onFuelStatChange(form, changedName) {
 		<input class="form-control" type="number" step="0.001" name="quantity" value="{{fuelRecord.quantity}}" placeholder="0.000" oninput="onFuelStatChange(this.form, this.name)" {% if not formUrl %}readonly{% endif %}>
 	</div>
 	<div class="form-group">
-		<div>
-		<label for="gasStation">Gas station</label>
-		</div>
-		<div>
-		<input list="gasStations" name="gasStation" value={{fuelRecord.gasStation.name}} placeholder="Type to search...">
+		<div><label for="fuelType">Fuel type</label></div>
+		<select name="fuelType">	<!-- TODO fix hardcoded -->
+			<option value="0" {% if fuelRecord.fuelType == 0 %} selected {% endif %}>Gas</option>
+			<option value="1" {% if fuelRecord.fuelType == 1 or not fuelRecord.fuelType %} selected {% endif %}>Unleaded 95</option>
+			<option value="2" {% if fuelRecord.fuelType == 2 %} selected {% endif %}>Unleaded 98</option>
+			<option value="3" {% if fuelRecord.fuelType == 2 %} selected {% endif %}>Unleaded 100</option>
+			<option value="4" {% if fuelRecord.fuelType == 2 %} selected {% endif %}>Diesel</option>
+		</select>
+	</div>
+	<div class="form-group">
+		<div><label for="gasStation">Gas station</label></div>
+		<input list="gasStations" name="gasStation" value="{{fuelRecord.gasStation.name}}" placeholder="Type to search...">
 		<datalist id="gasStations">
 		{% for gasStation in gasStations %}
 			<option data-value="{{gasStation.id}}" value="{{gasStation.name}}">
 		{% endfor %}
 		</datalist>
-		</div>
 	</div>
 	<div class="form-group">
 		<label for="comments">Comments</label>

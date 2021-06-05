@@ -44,9 +44,9 @@ def addCar(request):
 
 # Action
 @login_required
-def changeCar(request):
+def changeCar(request, licensePlate):
 	user = User.objects.get(username=request.user.username)
-	car = get_object_or_404(Car, licensePlate=request.POST['licensePlate'])
+	car = get_object_or_404(Car, licensePlate=licensePlate)
 	if not user.has_perm('kmrecord.change_car', car):
 		return HttpResponseForbidden()
 
@@ -58,9 +58,9 @@ def changeCar(request):
 
 # Action
 @login_required
-def deleteCar(request):
+def deleteCar(request, licensePlate):
 	user = User.objects.get(username=request.user.username)
-	car = get_object_or_404(Car, licensePlate=request.POST['licensePlate'])
+	car = get_object_or_404(Car, licensePlate=licensePlate)
 	if not user.has_perm('kmrecord.delete_car', car):
 		return HttpResponseForbidden()
 
@@ -108,7 +108,7 @@ def addRecord(request, licensePlate):
 			record.id = richRecord.id
 			saved = True
 
-	if {'pricePerLitre', 'price', 'quantity', 'gasStation'} <= request.POST.keys():
+	if {'pricePerLitre', 'price', 'quantity', 'gasStation', 'fuelType'} <= request.POST.keys():
 		strCheck = True
 		try:
 			pricePerLitre = Decimal(request.POST['pricePerLitre'])
@@ -123,6 +123,7 @@ def addRecord(request, licensePlate):
 			fuelRecord.pricePerLitre = pricePerLitre
 			fuelRecord.quantity = quantity
 			fuelRecord.price = price
+			fuelRecord.fuelType = request.POST['fuelType']
 			# Gas station special case as the user might create a new on request
 			if len(request.POST['gasStation']):
 				groupIds = ','.join([str(group.id) for group in groups])
@@ -195,7 +196,7 @@ def changeRecord(request, recordId):
 
 	# handle fuel stats: If fuel stats > 0 either change fuelrecord or create a new
 	# else if a fuel stat <= 0 delete fuelRecord
-	if {'pricePerLitre', 'price', 'quantity'} <= request.POST.keys():
+	if {'pricePerLitre', 'price', 'quantity', 'gasStation', 'fuelType'} <= request.POST.keys():
 		strCheck = True
 		try:
 			pricePerLitre = Decimal(request.POST['pricePerLitre'])
@@ -215,6 +216,7 @@ def changeRecord(request, recordId):
 			fuelRecord.pricePerLitre = pricePerLitre
 			fuelRecord.quantity = quantity
 			fuelRecord.price = price
+			fuelRecord.fuelType = request.POST['fuelType']
 			# Gas station special case as the user might create a new on request
 			if len(request.POST['gasStation']):
 				groupIds = ','.join([str(group.id) for group in groups])
@@ -292,7 +294,7 @@ def record(request, recordId):
 def createRecord(request, licensePlate):
 	user = User.objects.get(username=request.user.username)
 	car = get_object_or_404(Car, licensePlate=licensePlate)
-	if not user.has_perm('kmrecord.change_car', car):
+	if not user.has_perm('kmrecord.view_car', car) or not user.has_perm('kmrecord.add_record'):
 		return HttpResponseForbidden()
 	
 	#userCreated = UserObjectPermission.objects.select_related('content_type').filter(content_type__app_label='kmrecord', content_type__model='record', user_id=user.id)

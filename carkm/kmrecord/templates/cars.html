@@ -16,12 +16,11 @@
 	<tbody>
 	{% for car in cars %}
 		<tr>
-			<td><a href="{% url 'kmrecord:Car' car.licensePlate %}">{{ car.licensePlate }}</a></td> <!-- TODO change -->
+			<td><a href="{% url 'kmrecord:Car' car.licensePlate %}">{{ car.licensePlate }}</a></td>
 		{% get_obj_perms request.user for car as 'carPerms' %}
 		{% if 'change_car' in carPerms %}
-			<form method="post" action="{% url 'kmrecord:Change Car' %}">
+			<form method="post" action="{% url 'kmrecord:Change Car' car.licensePlate %}">
 			{% csrf_token %}
-				<input type="hidden" name="licensePlate" value="{{ car.licensePlate }}"> <!-- TODO change -->
 				<td><input type="text" name="name" maxlength="63" value="{{ car.name }}" required></td>
 				<td><input type="text" name="comments" maxlength="255" value="{{ car.comments }}"></td>
 				<td><div class="btn-group" role="group"><button type="submit" class="btn btn-primary">✓ Apply</button>
@@ -32,9 +31,8 @@
 			<td><div class="btn-group" role="group">
 		{% endif %}
 		{% if 'delete_car' in carPerms %}
-				<form method="post" action="{% url 'kmrecord:Delete Car' %}">
+				<form method="post" action="{% url 'kmrecord:Delete Car' car.licensePlate %}">
 					{% csrf_token %}
-					<input type="hidden" name="licensePlate" value="{{ car.licensePlate }}">
 					<button type="submit" class="btn btn-danger">— Delete</button>
 				</form>
 		{% endif %}

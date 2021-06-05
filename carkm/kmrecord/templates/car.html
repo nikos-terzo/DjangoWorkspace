@@ -29,7 +29,7 @@
 			</form>
 		{% else %}
 			<td>{{ record.km }}</td>
-			<td>{{ record.date }}</td>
+			<td>{{ record.date|date:'d/m/Y' }}</td>
 			<td><div class="btn-group" role="group">
 		{% endif %}
 		{% if 'delete_record' in recordPerms %}

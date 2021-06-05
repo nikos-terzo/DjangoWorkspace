@@ -16,14 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.contrib.auth import views as auth_views
+from django.views.generic.base import RedirectView
 from carkm import views
 
 urlpatterns = [
 	path('kmrecord/', include('kmrecord.urls')),
 	path('admin/', admin.site.urls),
-	path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name="User Login"),
+	path('login/', RedirectView.as_view(url='/accounts/login/')),
 	path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name="User Login"),
-	path('logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name="User Logout"),
+	path('logout/', RedirectView.as_view(url='/accounts/logout/')),
 	path('accounts/logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name="User Logout"),
 	path('accounts/profile/', views.userProfile, name='User Profile'),
 	# path('accounts/', include('django.contrib.auth.urls')),
