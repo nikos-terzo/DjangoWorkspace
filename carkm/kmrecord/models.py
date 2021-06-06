@@ -77,7 +77,7 @@ class Record(models.Model):
 	"""
 	km = models.DecimalField(max_digits=9, decimal_places=2)
 
-	date = models.DateTimeField(default=timezone.now())
+	date = models.DateTimeField(default=timezone.now)
 
 	car = models.ForeignKey('Car', on_delete=models.PROTECT, null=True, db_column='car_licensePlate')
 
