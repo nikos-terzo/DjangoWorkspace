@@ -1,4 +1,4 @@
-from django.http.response import HttpResponseForbidden#, HttpResponse
+from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -24,7 +24,7 @@ def cars(request):
 def addCar(request):
 	user = User.objects.get(username=request.user.username)
 	if not user.has_perm('kmrecord.add_car'):
-		return HttpResponseForbidden()
+		raise Http404
 
 	licensePlate = request.POST['licensePlate']
 	name = request.POST['name']
@@ -48,7 +48,7 @@ def changeCar(request, licensePlate):
 	user = User.objects.get(username=request.user.username)
 	car = get_object_or_404(Car, licensePlate=licensePlate)
 	if not user.has_perm('kmrecord.change_car', car):
-		return HttpResponseForbidden()
+		raise Http404
 
 	car.name = request.POST['name']
 	car.comments = request.POST['comments']
@@ -62,7 +62,7 @@ def deleteCar(request, licensePlate):
 	user = User.objects.get(username=request.user.username)
 	car = get_object_or_404(Car, licensePlate=licensePlate)
 	if not user.has_perm('kmrecord.delete_car', car):
-		return HttpResponseForbidden()
+		raise Http404
 
 	car.delete()
 	return redirect('kmrecord:Cars')
@@ -74,7 +74,7 @@ def car(request, licensePlate):
 	user = User.objects.get(username=request.user.username)
 	car = get_object_or_404(Car, licensePlate=licensePlate)
 	if not user.has_perm('kmrecord.view_car', car):
-		return HttpResponseForbidden()
+		raise Http404
 	
 	records = Record.objects.filter(car=car)
 	context = {'car': car, 'records': records}
@@ -88,7 +88,7 @@ def addRecord(request, licensePlate):
 	car = get_object_or_404(Car, licensePlate=licensePlate)
 	
 	if (not user.has_perm('kmrecord.add_record')) or (not user.has_perm('kmrecord.view_car', car)):
-		return HttpResponseForbidden()
+		raise Http404
 
 
 
@@ -166,7 +166,7 @@ def changeRecord(request, recordId):
 	user = User.objects.get(username=request.user.username)
 	record = get_object_or_404(Record, id=recordId)
 	if not user.has_perm('kmrecord.change_record', record):
-		return HttpResponseForbidden()
+		raise Http404
 
 	record.km = request.POST['km']
 	record.date = request.POST['date']
@@ -259,7 +259,7 @@ def deleteRecord(request, recordId):
 	user = User.objects.get(username=request.user.username)
 	record = get_object_or_404(Record, id=recordId)
 	if not user.has_perm('kmrecord.delete_record', record):
-		return HttpResponseForbidden()
+		raise Http404
 
 	record.delete()
 	return redirect('kmrecord:Car', licensePlate=record.car.licensePlate)
@@ -271,7 +271,7 @@ def record(request, recordId):
 	user = User.objects.get(username=request.user.username)
 	record = get_object_or_404(Record, id=recordId)
 	if not user.has_perm('kmrecord.view_record', record):
-		return HttpResponseForbidden()
+		raise Http404
 	
 	context = {'fuelRecord': None, 'comments': ''}
 	try:
@@ -295,7 +295,7 @@ def createRecord(request, licensePlate):
 	user = User.objects.get(username=request.user.username)
 	car = get_object_or_404(Car, licensePlate=licensePlate)
 	if not user.has_perm('kmrecord.view_car', car) or not user.has_perm('kmrecord.add_record'):
-		return HttpResponseForbidden()
+		raise Http404
 	
 	#userCreated = UserObjectPermission.objects.select_related('content_type').filter(content_type__app_label='kmrecord', content_type__model='record', user_id=user.id)
 	try:
@@ -333,7 +333,7 @@ def gasStations(request):
 def addGasStation(request):
 	user = User.objects.get(username=request.user.username)
 	if not user.has_perm('kmrecord.add_gasstation'):
-		return HttpResponseForbidden()
+		raise Http404
 
 	name = request.POST['name']
 	url = request.POST['url']
@@ -356,7 +356,7 @@ def changeGasStation(request, gasStationId):
 	user = User.objects.get(username=request.user.username)
 	gasStation = get_object_or_404(GasStation, id=gasStationId)
 	if not user.has_perm('kmrecord.change_gasstation', gasStation):
-		return HttpResponseForbidden()
+		raise Http404
 
 	gasStation.name = request.POST['name']
 	gasStation.url = request.POST['url']
@@ -370,7 +370,7 @@ def deleteGasStation(request, gasStationId):
 	user = User.objects.get(username=request.user.username)
 	gasStation = get_object_or_404(GasStation, id=gasStationId)
 	if not user.has_perm('kmrecord.delete_gasstation', gasStation):
-		return HttpResponseForbidden()
+		raise Http404
 
 	gasStation.delete()
 	return redirect('kmrecord:GasStations')
