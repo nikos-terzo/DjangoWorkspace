@@ -2,8 +2,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from guardian.models.models import UserObjectPermission
-from guardian.shortcuts import get_objects_for_user, assign_perm
+from guardian.shortcuts import get_objects_for_user, get_objects_for_group ,assign_perm
 from .models import Car, Record, FuelRecord, RichRecord, GasStation
 from decimal import Decimal, DecimalException
 from django.utils import timezone
@@ -14,8 +13,10 @@ from django.utils import timezone
 @login_required
 def cars(request):
 	user = User.objects.get(username=request.user.username)
-	context = {}
-	context['cars'] = get_objects_for_user(user, 'kmrecord.view_car')
+	groups = user.groups.all()
+	context = {'cars' : Car.objects.none()}
+	for group in groups:
+		context['cars'] |= get_objects_for_group(group, 'kmrecord.view_car')
 	return render(request, 'cars.html', context)
 
 
