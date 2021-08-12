@@ -9,6 +9,25 @@ from django.utils import timezone
 
 # Create your views here.
 
+
+# Page
+@login_required
+def index(request):
+	user = User.objects.get(username=request.user.username)
+	groups = user.groups.all()
+	context = {'cars': []}
+	cars = Car.objects.none()
+	for group in groups:
+		cars |= get_objects_for_group(group, 'kmrecord.view_car')
+		
+	for car in cars:
+		contextCar = {'licensePlate': car.licensePlate, 'name': car.name, 'recordStats': {'nRecords': 0, 'nFuelRecords': 0}}
+		records = Record.objects.filter(car=car)
+		contextCar['recordStats']['nRecords'] = len(records)
+		context['cars'].append(contextCar)
+	# test
+	return render(request, 'index.html', context)
+
 # Page
 @login_required
 def cars(request):

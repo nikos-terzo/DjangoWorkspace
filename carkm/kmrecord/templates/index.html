@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% load guardian_tags %}
+
+{% block content %}
+{% for car in cars %}
+<div class="container text-center">
+<h1>{{car.licensePlate}} - {{car.name}}</h1>
+<p>{{car.recordStats.nRecords}} total records of which {{car.recordStats.nFuelRecords}} are fuel records.</p>
+<a class="btn btn-primary" href={% url 'kmrecord:Car' car.licensePlate %}>View records</a>
+<a class="btn btn-success" href={% url 'kmrecord:Create Record' car.licensePlate %}>Create new record</a>
+</div>
+{% endfor %}
+{% endblock %}

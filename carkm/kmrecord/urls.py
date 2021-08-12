@@ -5,7 +5,7 @@ from . import views
 
 app_name = 'kmrecord'
 urlpatterns = [
-	path('', RedirectView.as_view(url='cars/')),
+	path('', views.index, name='Index'),
 	path('cars/', views.cars, name='Cars'),
 	path('cars/addCar', views.addCar, name='Add Car'),
 	path('cars/<str:licensePlate>/changeCar', views.changeCar, name='Change Car'),
