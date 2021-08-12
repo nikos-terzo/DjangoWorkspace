@@ -4,9 +4,8 @@
 
 {% block content %}
 
-<h1>{{ car.licensePlate }}: {{ car.name }}</h1> <!-- TODO: __str__ -->
-
-<table class="table">
+<h1 class="text-center">{{ car.licensePlate }}: {{ car.name }}</h1> <!-- TODO: __str__ -->
+<table class="table  table-striped vw-100">
 	<thead>
 		<tr>
 			<th scope="col">Id</th>
@@ -23,9 +22,9 @@
 		{% if 'change_record' in recordPerms %}
 			<form method="post" action="{% url 'kmrecord:Change Record' record.id %}">
 			{% csrf_token %}
-				<td><input type="number" name="km" step="0.01" value="{{ record.km }}" required></td>
-				<td><input type="date" name="date" value="{{ record.date|date:'Y-m-d' }}" required></td>
-				<td><div class="btn-group" role="group"><button type="submit" class="btn btn-primary">✓ Apply</button>
+				<td><input type="number" name="km" step="1.0" max="9999999.9" min="0.0" value="{{ record.km }}" style="height:1.5em;width:7em;" required></td>
+				<td><input type="date" name="date" min="1800-01-01" max="9999-12-31" value="{{ record.date|date:'Y-m-d' }}" style="height:1.5em;width:8em;" required></td>
+				<td><div class="btn-group" role="group"><button type="submit" class="btn btn-sm btn-primary">✓</button>
 			</form>
 		{% else %}
 			<td>{{ record.km }}</td>
@@ -35,7 +34,7 @@
 		{% if 'delete_record' in recordPerms %}
 				<form method="post" action="{% url 'kmrecord:Delete Record' record.id %}">
 					{% csrf_token %}
-					<button type="submit" class="btn btn-danger">— Delete</button>
+					<button type="submit" class="btn btn-sm btn-danger">—</button>
 				</form>
 		{% endif %}
 			</div></td>
@@ -47,13 +46,12 @@
 		<tfoot>
 			<tr>
 				<td></td>
-				<td><input type="number" name="km" step="0.01" required></td>
-				<td><input type="date" name="date" required></td>
-				<td><button type="submit" class="btn btn-success">+ Add</button></td>
+				<td><input type="number" name="km" class="input-sm" step="1.0" max="9999999.9" min="0.0" style="height:1.5em;width:7em;" required></td>
+				<td><input type="date" name="date" class="input-sm" min="1800-01-01" max="9999-12-31" style="height:1.5em;width:8em;" required></td>
+				<td><button type="submit" class="btn btn-sm btn-success">+</button></td>
 			</tr>
 		</tfoot>
 	</form>
 
 </table>
-
 {% endblock %}

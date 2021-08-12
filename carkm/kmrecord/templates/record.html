@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load guardian_tags %}
-{% load carkm_tags %}
+{% comment %} {% load carkm_tags %} {% endcomment %}
 {% comment %} 
 context contains:
 fuelRecord: Object - Current FuelRecord to change or a previous one for add
@@ -43,31 +43,31 @@ function onFuelStatChange(form, changedName) {
 }
 </script>
 
-<h1>Record: {% if fuelRecord.id %}{{fuelRecord.id}}{% else %}New{% endif %}</h1>
+<h1 class="text-center">Record: {% if fuelRecord.id %}{{fuelRecord.id}}{% else %}New{% endif %}</h1>
 
-<form method="post" action={{formUrl}}>
+<form class="container-fluid" method="post" action={{formUrl}}>
 	{% csrf_token %}
-	<div class="form-group">
+	<div class="form-group form-control-lg">
 		<label for="km">Kilometers</label>
 		<input class="form-control" type="number" step="0.01" name="km" value="{{fuelRecord.km}}" {% if not formUrl %}readonly{% endif %} required>
 	</div>
-	<div class="form-group">
+	<div class="form-group form-control-lg">
 		<label for="date">Date</label>
 		<input class="form-control" type="date" name="date" value="{{fuelRecord.date|date:'Y-m-d'}}" {% if not formUrl %}readonly{% endif %} required>
 	</div>
-	<div class="form-group">
+	<div class="form-group form-control-lg">
 		<label for="pricePerLitre">Price per litre</label>
 		<input class="form-control" type="number" step="0.001" name="pricePerLitre" value="{{fuelRecord.pricePerLitre}}" placeholder="{{fuelRecord.pricePerLitre}}" oninput="onFuelStatChange(this.form, this.name)" {% if not formUrl %}readonly{% endif %}>
 	</div>
-	<div class="form-group">
+	<div class="form-group form-control-lg">
 		<label for="price">Total price</label>
 		<input class="form-control" type="number" step="0.01" name="price" value="{{fuelRecord.price}}" placeholder="0.00" oninput="onFuelStatChange(this.form, this.name)" {% if not formUrl %}readonly{% endif %}>
 	</div>
-	<div class="form-group">
+	<div class="form-group form-control-lg">
 		<label for="quantity">Quantity</label>
 		<input class="form-control" type="number" step="0.001" name="quantity" value="{{fuelRecord.quantity}}" placeholder="0.000" oninput="onFuelStatChange(this.form, this.name)" {% if not formUrl %}readonly{% endif %}>
 	</div>
-	<div class="form-group">
+	<div class="form-group form-control-lg">
 		<div><label for="fuelType">Fuel type</label></div>
 		<select name="fuelType">	<!-- TODO fix hardcoded -->
 			<option value="0" {% if fuelRecord.fuelType == 0 %} selected {% endif %}>Gas</option>
@@ -77,7 +77,7 @@ function onFuelStatChange(form, changedName) {
 			<option value="4" {% if fuelRecord.fuelType == 2 %} selected {% endif %}>Diesel</option>
 		</select>
 	</div>
-	<div class="form-group">
+	<div class="form-group form-control-lg">
 		<div><label for="gasStation">Gas station</label></div>
 		<input list="gasStations" name="gasStation" value="{{fuelRecord.gasStation.name}}" placeholder="Type to search...">
 		<datalist id="gasStations">
@@ -86,15 +86,13 @@ function onFuelStatChange(form, changedName) {
 		{% endfor %}
 		</datalist>
 	</div>
-	<div class="form-group">
+	<div class="form-group form-control-lg">
 		<label for="comments">Comments</label>
 		<textarea class="form-control" name="comments"  {% if not formUrl %}readonly{% endif %}>{{comments}}</textarea>
 	</div>
-
 	{% if formUrl %}
-	<button type="submit" class="btn btn-primary">Submit</button>
+	<button type="submit" class="btn-lg btn-primary form-control">Submit</button>
 	{% endif %}
 </form>
-
 
 {% endblock %}

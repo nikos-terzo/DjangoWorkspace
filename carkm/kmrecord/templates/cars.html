@@ -3,8 +3,7 @@
 {% load guardian_tags %}
 
 {% block content %}
-
-<table class="table">
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<th scope="col">License Plate</th>
@@ -23,7 +22,7 @@
 			{% csrf_token %}
 				<td><input type="text" name="name" maxlength="63" value="{{ car.name }}" required></td>
 				<td><input type="text" name="comments" maxlength="255" value="{{ car.comments }}"></td>
-				<td><div class="btn-group" role="group"><button type="submit" class="btn btn-primary">✓ Apply</button>
+				<td><div class="btn-group" role="group"><button type="submit" class="btn btn-primary">✓</button>
 			</form>
 		{% else %}
 			<td>{{ car.name }}</td>
@@ -33,7 +32,8 @@
 		{% if 'delete_car' in carPerms %}
 				<form method="post" action="{% url 'kmrecord:Delete Car' car.licensePlate %}">
 					{% csrf_token %}
-					<button type="submit" class="btn btn-danger">— Delete</button>
+					<input type="hidden" name="licensePlate" value="{{ car.licensePlate }}">
+					<button type="submit" class="btn btn-danger">—</button>
 				</form>
 		{% endif %}
 			</div></td>
@@ -47,7 +47,7 @@
 				<td><input type="text" name="licensePlate" maxlength="7" required></td>
 				<td><input type="text" name="name" maxlength="63" required></td>
 				<td><input type="text" name="comments" maxlength="255"></td>
-				<td><button type="submit" class="btn btn-success">+ Add</button></td>
+				<td><button type="submit" class="btn btn-success">+</button></td>
 			</tr>
 		</tfoot>
 	</form>
