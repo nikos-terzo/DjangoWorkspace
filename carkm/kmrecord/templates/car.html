@@ -4,54 +4,73 @@
 
 {% block content %}
 
+<script type="text/javascript">
+function verboseFun(checked)
+{
+	elements = document.getElementsByClassName("verbose");
+	for (var i=0; i< elements.length; i++) {
+		elements[i].style.display = (checked ? "" : "none");
+	}
+
+	elements = document.getElementsByClassName("stretch");
+	for (var i=0; i< elements.length; i++) {
+		elements[i].style.width = (checked ? "20%" : "50%");
+	}
+}
+</script>
+
 <h1 class="text-center">{{ car.licensePlate }}: {{ car.name }}</h1> <!-- TODO: __str__ -->
+<div class="d-flex justify-content-end">
+<div class="form-switch">
+	<input class="form-check-input" type="checkbox" id="verboseCheck" onChange="verboseFun(this.checked)" checked/>
+	<label class="form-check-label" for="verboseCheck">Verbose </label>
+</div>
+</div>
 <table class="table  table-striped vw-100">
 	<thead>
 		<tr>
 			<th scope="col">Id</th>
-			<th scope="col">KM</th>
-			<th scope="col">Date</th>
+			<th style="width: 20%" class="stretch text-center" scope="col">KM</th>
+			<th style="width: 20%" class="stretch text-center" scope="col">Date</th>
+			<th style="width: 20%" class="stretch verbose text-center" scope="col">Price per litre</th>
+			<th style="width: 20%" class="stretch verbose text-center" scope="col">Price</th>
+			<th style="width: 20%" class="stretch verbose text-center" scope="col">Quantity</th>
 			<th scope="col">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
 	{% for record in records %}
 		<tr>
-			<td><a href="{% url 'kmrecord:Record' record.id %}">{{ record.id }}</a></td>
-		{% get_obj_perms request.user for record as 'recordPerms' %}
-		{% if 'change_record' in recordPerms %}
-			<form method="post" action="{% url 'kmrecord:Change Record' record.id %}">
-			{% csrf_token %}
-				<td><input type="number" name="km" step="1.0" max="9999999.9" min="0.0" value="{{ record.km }}" style="height:1.5em;width:7em;" required></td>
-				<td><input type="date" name="date" min="1800-01-01" max="9999-12-31" value="{{ record.date|date:'Y-m-d' }}" style="height:1.5em;width:8em;" required></td>
-				<td><div class="btn-group" role="group"><button type="submit" class="btn btn-sm btn-primary">✓</button>
-			</form>
-		{% else %}
-			<td>{{ record.km }}</td>
-			<td>{{ record.date|date:'d/m/Y' }}</td>
+			{% comment %} <a href="{% url 'kmrecord:Record' record.id %}"> </a>{% endcomment %}
+			<td class="text-center">{{ record.id }}</td>
+			<td class="text-center">{{ record.km }}</td>
+			<td class="text-center">{{ record.date|date:'Y-m-d' }}</td>
+			<td class="verbose text-center">{{ record.fuelrecord.pricePerLitre}}</td>
+			<td class="verbose text-center">{{ record.fuelrecord.price}}</td>
+			<td class="verbose text-center">{{ record.fuelrecord.quantity}}</td>
 			<td><div class="btn-group" role="group">
-		{% endif %}
+				<a href="{% url 'kmrecord:Record' record.id %}" class="btn btn-sm btn-info" role="button">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+						<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+						<path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+					</svg>
+				</a>
+		{% get_obj_perms request.user for record as 'recordPerms' %}
 		{% if 'delete_record' in recordPerms %}
 				<form method="post" action="{% url 'kmrecord:Delete Record' record.id %}">
 					{% csrf_token %}
-					<button type="submit" class="btn btn-sm btn-danger">—</button>
+					<button type="submit" class="btn btn-sm btn-danger">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+							<path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+						</svg>
 				</form>
 		{% endif %}
 			</div></td>
 		</tr>
 	{% endfor %}
 	</tbody>
-	<form method="post" action="{% url 'kmrecord:Add Record' car.licensePlate %}">
-	{% csrf_token %}
-		<tfoot>
-			<tr>
-				<td></td>
-				<td><input type="number" name="km" class="input-sm" step="1.0" max="9999999.9" min="0.0" style="height:1.5em;width:7em;" required></td>
-				<td><input type="date" name="date" class="input-sm" min="1800-01-01" max="9999-12-31" style="height:1.5em;width:8em;" required></td>
-				<td><button type="submit" class="btn btn-sm btn-success">+</button></td>
-			</tr>
-		</tfoot>
-	</form>
-
 </table>
+<div class="container text-center">
+	<a href="{% url 'kmrecord:Create Record' car.licensePlate %}" class="btn btn-sm btn-success" role="button">Create New Record</a>
+</div>
 {% endblock %}

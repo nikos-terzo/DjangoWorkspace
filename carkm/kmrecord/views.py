@@ -95,8 +95,10 @@ def car(request, licensePlate):
 	car = get_object_or_404(Car, licensePlate=licensePlate)
 	if not user.has_perm('kmrecord.view_car', car):
 		raise Http404
-	
-	records = Record.objects.filter(car=car)
+
+	records =  Record.objects.filter(car=car).select_related('fuelrecord')
+	print(records[0].fuelrecord.pricePerLitre)
+
 	context = {'car': car, 'records': records}
 	return render(request, 'car.html', context)
 
