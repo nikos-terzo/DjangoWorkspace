@@ -61,11 +61,11 @@ function onFuelStatChange(form, changedName) {
 	</div>
 	<div class="form-group form-control-lg">
 		<label for="price">Total price</label>
-		<input class="form-control" type="number" step="0.01" name="price" value="{{fuelRecord.price}}" placeholder="0.00" oninput="onFuelStatChange(this.form, this.name)" {% if not formUrl %}readonly{% endif %}>
+		<input class="form-control" type="number" step="0.01" name="price" {% if fuelRecord.id %}value="{{fuelRecord.price}}"{% endif %} placeholder="0.00" oninput="onFuelStatChange(this.form, this.name)" {% if not formUrl %}readonly{% endif %}>
 	</div>
 	<div class="form-group form-control-lg">
 		<label for="quantity">Quantity</label>
-		<input class="form-control" type="number" step="0.001" name="quantity" value="{{fuelRecord.quantity}}" placeholder="0.000" oninput="onFuelStatChange(this.form, this.name)" {% if not formUrl %}readonly{% endif %}>
+		<input class="form-control" type="number" step="0.001" name="quantity" {% if fuelRecord.id %}value="{{fuelRecord.quantity}}"{% endif %} placeholder="0.000" oninput="onFuelStatChange(this.form, this.name)" {% if not formUrl %}readonly{% endif %}>
 	</div>
 	<div class="form-group form-control-lg">
 		<div><label for="fuelType">Fuel type</label></div>
@@ -73,8 +73,9 @@ function onFuelStatChange(form, changedName) {
 			<option value="0" {% if fuelRecord.fuelType == 0 %} selected {% endif %}>Gas</option>
 			<option value="1" {% if fuelRecord.fuelType == 1 or not fuelRecord.fuelType %} selected {% endif %}>Unleaded 95</option>
 			<option value="2" {% if fuelRecord.fuelType == 2 %} selected {% endif %}>Unleaded 98</option>
-			<option value="3" {% if fuelRecord.fuelType == 2 %} selected {% endif %}>Unleaded 100</option>
-			<option value="4" {% if fuelRecord.fuelType == 2 %} selected {% endif %}>Diesel</option>
+			<option value="3" {% if fuelRecord.fuelType == 3 %} selected {% endif %}>Unleaded 100</option>
+			<option value="4" {% if fuelRecord.fuelType == 4 %} selected {% endif %}>Diesel</option>
+			<option value="5" {% if fuelRecord.fuelType == 5 %} selected {% endif %}>Diesel Extra</option>
 		</select>
 	</div>
 	<div class="form-group form-control-lg">

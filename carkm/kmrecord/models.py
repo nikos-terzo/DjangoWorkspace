@@ -33,7 +33,8 @@ class FuelType(Enum):
 	GASOLINE95 = 1
 	GASOLINE98 = 2
 	GASOLINE100 = 3
-	PETROLEUM = 4
+	DIESEL = 4
+	DIESELEXTRA = 5
 
 
 class Car(models.Model):
