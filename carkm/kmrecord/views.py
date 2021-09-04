@@ -96,7 +96,7 @@ def car(request, licensePlate):
 	if not user.has_perm('kmrecord.view_car', car):
 		raise Http404
 
-	records =  Record.objects.filter(car=car).select_related('fuelrecord')
+	records =  Record.objects.filter(car=car).select_related('fuelrecord', 'richrecord')
 	print(records[0].fuelrecord.pricePerLitre)
 
 	context = {'car': car, 'records': records}

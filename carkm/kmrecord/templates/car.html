@@ -18,8 +18,11 @@ function verboseFun(checked)
 	}
 }
 </script>
-
+<div class="row">
+<div class="col-md-12">
 <h1 class="text-center">{{ car.licensePlate }}: {{ car.name }}</h1> <!-- TODO: __str__ -->
+</div>
+</div>
 <div class="d-flex justify-content-end">
 <div class="form-switch">
 	<input class="form-check-input" type="checkbox" id="verboseCheck" onChange="verboseFun(this.checked)" checked/>
@@ -45,9 +48,13 @@ function verboseFun(checked)
 			<td class="text-center">{{ record.id }}</td>
 			<td class="text-center">{{ record.km }}</td>
 			<td class="text-center">{{ record.date|date:'Y-m-d' }}</td>
+			{% if record.fuelrecord.pricePerLitre %}
 			<td class="verbose text-center">{{ record.fuelrecord.pricePerLitre}}</td>
 			<td class="verbose text-center">{{ record.fuelrecord.price}}</td>
 			<td class="verbose text-center">{{ record.fuelrecord.quantity}}</td>
+			{% else %}
+			<td colspan="3" class="verbose text-start">{{record.richrecord.comments}}</td>
+			{% endif %}
 			<td><div class="btn-group" role="group">
 				<a href="{% url 'kmrecord:Record' record.id %}" class="btn btn-sm btn-info" role="button">
 					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
