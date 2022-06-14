@@ -171,7 +171,7 @@ def addRecord(request, licensePlate):
 			saved = True
 	
 	if not saved:
-		record.save()
+		record.save()	# Here it seems base class is saved automatically
 	
 	assign_perm('kmrecord.change_record', user, record)
 	assign_perm('kmrecord.delete_record', user, record)
@@ -192,7 +192,6 @@ def changeRecord(request, recordId):
 
 	record.km = request.POST['km']
 	record.date = request.POST['date']
-	saved = False
 
 	groups = user.groups.all()
 
@@ -207,8 +206,7 @@ def changeRecord(request, recordId):
 				richRecord = RichRecord(record=record)
 				richRecord.__dict__.update(record.__dict__)
 			richRecord.comments = comments
-			richRecord.save()
-			saved = True
+			richRecord.save() # Here I do not do record.id = richRecord.id. TODO: test
 		else:
 			try:
 				richRecord = record.richrecord
@@ -261,7 +259,6 @@ def changeRecord(request, recordId):
 				
 			fuelRecord.save()
 			record.id = fuelRecord.id
-			saved = True
 		else:
 			try:
 				fuelRecord = record.fuelrecord
@@ -269,8 +266,8 @@ def changeRecord(request, recordId):
 			except FuelRecord.DoesNotExist:
 				pass
 
-	if not saved:
-		record.save()
+	
+	record.save()	# Here we need to save base class explicitely
 	
 	return redirect('kmrecord:Car', licensePlate=record.car.licensePlate)
 
